@@ -79,7 +79,7 @@ class Game(Screen):
                 return collision
 
     def on_touch_down(self, *args):
-        self.ids.player.speed = self.height*0.7
+        self.ids.player.speed = self.height*0.8
 
 
 class GameOver(Screen):
