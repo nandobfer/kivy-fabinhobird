@@ -1,0 +1,105 @@
+Manager:
+    Menu:
+        name:'menu'
+    Game:
+        name: 'game'
+    GameOver:
+        name: 'gameover'
+
+<MenuButton@Button>:
+    font_size:'50sp'
+    background_normal:'assets/button.png'
+    background_down:'assets/button_down.png'
+    size_hint: None, None
+    size: 195,85
+
+<Menu>:
+    FloatLayout:
+        canvas:
+            Color:
+                rgba: 1,1,1,1
+            Rectangle:
+                size: self.size
+                pos: self.pos
+                source: 'assets/background.png'
+
+        Label:
+            text: 'Fabinho Bird'
+            font_size: '50sp'
+            y: (self.parent.height / 2) * 0.5
+
+        Widget:
+        FloatLayout:
+            MenuButton:
+                text: 'Start'
+                on_release: app.root.current = 'game'
+                center_x: (self.parent.width / 2) - self.width / 2
+            MenuButton:
+                text: 'Exit'
+                on_release: app.stop()
+                center_x: (self.parent.width / 2) + self.width / 2
+<Player>:
+    source:'assets/bird.webp'
+<Game>:
+    FloatLayout:
+        canvas.before:
+            Color:
+                rgba: 1,1,1,1
+            Rectangle:
+                size: self.size
+                pos: self.pos
+                source: 'assets/background.png'
+
+        Label:
+            text: 'Score: ' + str(int(root.score))
+            font_size: '70sp'
+            bold:True
+            size_hint_y: None
+            height: self.font_size
+            y: root.height*0.95 - self.height
+
+        # MenuButton:
+        #     text:'Menu'
+        #     on_release: app.root.current = 'menu'
+        #     y: self.parent.height - self.height
+        #     x: 0
+
+        Player:
+            id: player
+            allow_stretch: True
+            size_hint: None, None
+            size: root.height/15, root.height/15
+            x: root.width/20
+            y: root.height/2
+
+<GameOver>:
+    FloatLayout:
+        Label:
+            text: 'Game Over'
+            font_size: '100sp'
+            bold:True
+        Label:
+            text: 'Score: ' + str(int(root.score))
+            font_size: '70sp'
+            bold:True
+            size_hint_y: None
+            height: self.font_size
+            y: root.height*0.95 - self.height
+        MenuButton:
+            text:'Try Again'
+            on_release: app.root.current = 'game'
+            center_x: (self.parent.width / 2) - self.width / 2
+        MenuButton:
+            text: 'Exit'
+            on_release: app.stop()
+            center_x: (self.parent.width / 2) + self.width / 2
+
+<Obstacle>:
+    canvas:
+        Color:
+            rgba: self.color
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    size_hint: None, None
+    width: '50dp'
