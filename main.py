@@ -96,7 +96,7 @@ class Player(Image):
 
 
 class Obstacle(Widget):
-    color = ListProperty([0.3, 0.2, 0.2, 1])
+    # color = ListProperty([0.3, 0.2, 0.2, 1])
     game_screen = None
     scored = False
 
