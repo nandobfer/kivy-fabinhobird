@@ -110,7 +110,7 @@ class Obstacle(Widget):
     def on_x(self, *args):
         if self.game_screen:
             player = self.game_screen.ids.player
-            if self.x < player.x and self.scored == False:
+            if self.x < player.x and not self.scored:
                 self.game_screen.score += 0.5
                 self.scored = True
 

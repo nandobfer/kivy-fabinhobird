@@ -11,7 +11,6 @@ Manager:
     background_normal:'assets/button.png'
     background_down:'assets/button_down.png'
     size_hint: None, None
-    size: 195,85
 
 <Menu>:
     FloatLayout:
@@ -24,7 +23,8 @@ Manager:
                 source: 'assets/background.png'
 
         Label:
-            text: 'Fabinho Bird'
+            # text: 'Fabinho Bird'
+            text: str(root.width) + ', ' + str(root.height)
             font_size: '50sp'
             y: (self.parent.height / 2) * 0.5
 
@@ -33,11 +33,15 @@ Manager:
             MenuButton:
                 text: 'Start'
                 on_release: app.root.current = 'game'
-                center_x: (self.parent.width / 2) - self.width / 2
+                center_x: (self.parent.width / 4)
+                size: int(root.width / 4) , int(root.height / 6)
+
             MenuButton:
                 text: 'Exit'
                 on_release: app.stop()
-                center_x: (self.parent.width / 2) + self.width / 2
+                center_x: (self.parent.width * 3 / 4)
+                size: int(root.width / 4) , int(root.height / 6)
+
 <Player>:
     source:'assets/player.png'
 <Game>:
@@ -62,13 +66,15 @@ Manager:
         #     text:'Menu'
         #     on_release: app.root.current = 'menu'
         #     y: self.parent.height - self.height
+        #     size: int(root.width / 4) , int(root.height / 6)
+
         #     x: 0
 
         Player:
             id: player
             # allow_stretch: True
             size_hint: None, None
-            size: root.height/12, root.height/12
+            size: root.height/10, root.height/10
             x: root.width/20
             y: root.height/2
 
@@ -89,10 +95,14 @@ Manager:
             text:'Try Again'
             on_release: app.root.current = 'game'
             center_x: (self.parent.width / 2) - self.width / 2
+            size: int(root.width / 4) , int(root.height / 6)
+
         MenuButton:
             text: 'Exit'
             on_release: app.stop()
             center_x: (self.parent.width / 2) + self.width / 2
+            size: int(root.width / 4) , int(root.height / 6)
+
 
 <Obstacle>:
     canvas:
