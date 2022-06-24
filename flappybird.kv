@@ -23,10 +23,11 @@ Manager:
                 source: 'assets/background.png'
 
         Label:
-            # text: 'Fabinho Bird'
-            text: str(root.width) + ', ' + str(root.height)
+            text: 'Fabinho Bird'
             font_size: '50sp'
             y: (self.parent.height / 2) * 0.5
+            color: 0.2, 0.7, 1, 1
+            bold:True
 
         Widget:
         FloatLayout:
@@ -55,8 +56,10 @@ Manager:
                 source: 'assets/background.png'
 
         Label:
+            # Score Label
             text: 'Score: ' + str(int(root.score))
             font_size: '70sp'
+            color: 0.2, 0.7, 1, 1
             bold:True
             size_hint_y: None
             height: self.font_size
@@ -74,7 +77,7 @@ Manager:
             id: player
             # allow_stretch: True
             size_hint: None, None
-            size: root.height/10, root.height/10
+            size: root.height/12, root.height/12
             x: root.width/20
             y: root.height/2
 
@@ -93,12 +96,14 @@ Manager:
             y: root.height*0.95 - self.height
         MenuButton:
             text:'Try Again'
+            font_size: '50sp'
             on_release: app.root.current = 'game'
             center_x: (self.parent.width / 2) - self.width / 2
             size: int(root.width / 4) , int(root.height / 6)
 
         MenuButton:
             text: 'Exit'
+            font_size: '50sp'
             on_release: app.stop()
             center_x: (self.parent.width / 2) + self.width / 2
             size: int(root.width / 4) , int(root.height / 6)
