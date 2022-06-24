@@ -21,6 +21,22 @@ class Manager(ScreenManager):
 class Menu(Screen):
     pass
 
+class MenuMultiplayer(Screen):
+    status = StringProperty('Aguardando jogador 2')
+    
+    def on_enter(self, *args):
+        Clock.schedule_once(self.getPlayer2, 1)
+        return super().on_enter(*args)
+
+    def getPlayer2(self, *args):
+        player = client.player2
+        if not player:
+            Clock.schedule_once(self.getPlayer2, 1)
+        else:
+            self.status = f'Player 2 joined!'
+            
+
+
 
 class Game(Screen):
     obstacles = []
@@ -36,7 +52,8 @@ class Game(Screen):
         self.ids.player.speed = 0
 
     def increaseScore(self, *args):
-        self.score += 1
+        self.score += 0.5
+        client.sio.emit('score', self.score)
 
     def spawnObstacle(self, *args):
         gap = self.height*0.3
@@ -101,7 +118,10 @@ class LoadingScreen(Screen):
     def connect(self, *args):
         global client
         client = Socket()
-        App.get_running_app().root.current = 'menu'
+        App.get_running_app().root.current = 'menu-multiplayer'
+        
+class StartMenu(Screen):
+    pass
 
 
 class Player(Image):
@@ -124,7 +144,7 @@ class Obstacle(Widget):
         if self.game_screen:
             player = self.game_screen.ids.player
             if self.x < player.x and not self.scored:
-                self.game_screen.score += 0.5
+                self.game_screen.increaseScore()
                 self.scored = True
 
     def vanish(self, *args):
@@ -134,7 +154,8 @@ class Obstacle(Widget):
 
 class FlappyBird(App):
     def on_stop(self, *args):
-        client.disconnect()
+        if client:
+            client.disconnect()
 
 
 FlappyBird().run()

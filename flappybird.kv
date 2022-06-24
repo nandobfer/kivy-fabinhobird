@@ -1,8 +1,12 @@
 Manager:
+    StartMenu:
+        name: 'start'
     LoadingScreen:
         name: 'loadingscreen'
     Menu:
         name:'menu'
+    MenuMultiplayer:
+        name:'menu-multiplayer'
     Game:
         name: 'game'
     GameOver:
@@ -13,6 +17,46 @@ Manager:
     background_normal:'assets/button.png'
     background_down:'assets/button_down.png'
     size_hint: None, None
+
+<StartMenu>:
+    FloatLayout:
+        canvas:
+            Color:
+                rgba: 1,1,1,1
+            Rectangle:
+                size: self.size
+                pos: self.pos
+                source: 'assets/background.png'
+        
+        Label:
+            text: 'Fabinho Bird'
+            font_size: '50sp'
+            y: (self.parent.height / 2) * 0.5
+            color: 0.2, 0.7, 1, 1
+            bold:True
+
+        MenuButton:
+            text: '1 Jogador'
+            font_size: '50sp'
+            size: int(root.width / 2.8) , int(root.height / 6)
+            on_release: app.root.current = 'menu'
+            center_x: self.parent.width / 2
+            center_y: (self.parent.height / 2) + self.height * 0.3
+
+        MenuButton:
+            text: '2 Jogadores'
+            font_size: '50sp'
+            size: int(root.width / 2.8) , int(root.height / 6)
+            on_release: app.root.current = 'loadingscreen'
+            center_x: self.parent.width / 2
+            center_y: (self.parent.height / 2) - self.height * 1
+
+        MenuButton:
+            # EXIT BUTTON
+            text: 'Exit'
+            on_release: app.stop()
+            center_x: (self.parent.width * 3 / 4)
+            size: int(root.width / 4) , int(root.height / 6)
 
 <LoadingScreen>:
     FloatLayout:
@@ -25,21 +69,28 @@ Manager:
                 source: 'assets/background.png'
 
         Label:
-            text: 'Carregando'
-            font_size: '50sp'
+            text: 'Conectando ao servidor...'
+            font_size: '35sp'
             y: (self.parent.height / 2) * 0.5
             color: 0.2, 0.7, 1, 1
             bold:True
 
-<LoadingBar>:
-    canvas:
-        Color:
-            rgba: 0.3, 0.2, 0.2, 1
-        Rectangle:
-            size: self.size
-            pos: self.pos
-    size_hint: None, None
-    height: '50dp'
+<MenuMultiplayer>:
+    FloatLayout:
+        canvas:
+            Color:
+                rgba: 1,1,1,1
+            Rectangle:
+                size: self.size
+                pos: self.pos
+                source: 'assets/background.png'
+
+        Label:
+            text: root.status
+            font_size: '20sp'
+            y: (self.parent.height / 2) * 0.5
+            color: 0.2, 0.7, 1, 1
+            bold:True
 
 <Menu>:
     FloatLayout:
@@ -67,6 +118,7 @@ Manager:
                 size: int(root.width / 4) , int(root.height / 6)
 
             MenuButton:
+                # EXIT BUTTON
                 text: 'Exit'
                 on_release: app.stop()
                 center_x: (self.parent.width * 3 / 4)
