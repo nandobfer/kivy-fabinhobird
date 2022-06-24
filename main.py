@@ -8,8 +8,10 @@ from kivy.animation import Animation
 from kivy.properties import NumericProperty, ListProperty, StringProperty
 
 from random import random
+from client import Socket
 
 fps = 1/60
+client = None
 
 
 class Manager(ScreenManager):
@@ -91,6 +93,17 @@ class GameOver(Screen):
         self.score = self.game_screen.score
 
 
+class LoadingScreen(Screen):
+
+    def on_enter(self, *args):
+        Clock.schedule_once(self.connect, 2)
+
+    def connect(self, *args):
+        global client
+        client = Socket()
+        App.get_running_app().root.current = 'menu'
+
+
 class Player(Image):
     speed = NumericProperty(0)
 
@@ -120,7 +133,8 @@ class Obstacle(Widget):
 
 
 class FlappyBird(App):
-    pass
+    def on_stop(self, *args):
+        client.disconnect()
 
 
 FlappyBird().run()

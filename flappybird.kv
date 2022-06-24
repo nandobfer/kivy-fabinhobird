@@ -1,4 +1,6 @@
 Manager:
+    LoadingScreen:
+        name: 'loadingscreen'
     Menu:
         name:'menu'
     Game:
@@ -11,6 +13,33 @@ Manager:
     background_normal:'assets/button.png'
     background_down:'assets/button_down.png'
     size_hint: None, None
+
+<LoadingScreen>:
+    FloatLayout:
+        canvas:
+            Color:
+                rgba: 1,1,1,1
+            Rectangle:
+                size: self.size
+                pos: self.pos
+                source: 'assets/background.png'
+
+        Label:
+            text: 'Carregando'
+            font_size: '50sp'
+            y: (self.parent.height / 2) * 0.5
+            color: 0.2, 0.7, 1, 1
+            bold:True
+
+<LoadingBar>:
+    canvas:
+        Color:
+            rgba: 0.3, 0.2, 0.2, 1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    size_hint: None, None
+    height: '50dp'
 
 <Menu>:
     FloatLayout:
