@@ -50,13 +50,16 @@ class Game(Screen):
         self.add_widget(obstacle_upper)
 
     def update(self, *args):
-        self.ids.player.speed += -self.height * 2 * fps
+        self.ids.player.speed += -self.height * 3 * fps
         self.ids.player.y += self.ids.player.speed * fps
 
         if self.ids.player.y > self.height or self.ids.player.y < 0:
             self.gameOver()
         elif self.playerCollided():
             self.gameOver()
+
+    def on_touch_down(self, *args):
+        self.ids.player.speed = self.height*1
 
     def gameOver(self, *args):
         Clock.unschedule(self.update, fps)
@@ -77,9 +80,6 @@ class Game(Screen):
             if self.getCollision(self.ids.player, obstacle):
                 collision = True
                 return collision
-
-    def on_touch_down(self, *args):
-        self.ids.player.speed = self.height*0.8
 
 
 class GameOver(Screen):
