@@ -46,8 +46,8 @@ class Game(Screen):
         self.obstacles.append(obstacle_lower)
         self.obstacles.append(obstacle_upper)
 
-        self.add_widget(obstacle_lower)
-        self.add_widget(obstacle_upper)
+        self.add_widget(obstacle_lower, 1)
+        self.add_widget(obstacle_upper, 1)
 
     def update(self, *args):
         self.ids.player.speed += -self.height * 3 * fps

@@ -46,14 +46,14 @@ Manager:
 <Player>:
     source:'assets/player.png'
 <Game>:
+    canvas.before:
+        Color:
+            rgba: 1,1,1,1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+            source: 'assets/background.png'
     FloatLayout:
-        canvas.before:
-            Color:
-                rgba: 1,1,1,1
-            Rectangle:
-                size: self.size
-                pos: self.pos
-                source: 'assets/background.png'
 
         Label:
             # Score Label
