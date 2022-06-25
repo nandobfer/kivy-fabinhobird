@@ -191,9 +191,9 @@ Manager:
             size: int(root.width / 4) , int(root.height / 6)
 
         MenuButton:
-            text: 'Exit'
+            text: 'Menu'
             font_size: '50sp'
-            on_release: app.stop()
+            on_release: app.root.current = 'start'
             center_x: (self.parent.width / 2) + self.width / 2
             size: int(root.width / 4) , int(root.height / 6)
 
