@@ -13,8 +13,9 @@ Manager:
         name: 'gameover'
 
 <MenuButton@Button>:
-    font_size:'50sp'
+    font_size:'50dp'
     background_normal:'assets/button.png'
+    background_disabled:'assets/button.png'
     background_down:'assets/button_down.png'
     size_hint: None, None
 
@@ -30,14 +31,14 @@ Manager:
         
         Label:
             text: 'Fabinho Bird'
-            font_size: '70sp'
+            font_size: '70dp'
             y: (self.parent.height / 2) * 0.5
             color: 1, 1, 1, 1
             bold:True
 
         MenuButton:
             text: '1 Jogador'
-            font_size: '50sp'
+            font_size: '50dp'
             size: int(root.width / 2.8) , int(root.height / 6)
             on_release: app.root.current = 'menu'
             center_x: self.parent.width / 2
@@ -45,7 +46,7 @@ Manager:
 
         MenuButton:
             text: '2 Jogadores'
-            font_size: '50sp'
+            font_size: '50dp'
             size: int(root.width / 2.8) , int(root.height / 6)
             on_release: app.root.current = 'loadingscreen'
             center_x: self.parent.width / 2
@@ -71,7 +72,7 @@ Manager:
 
         Label:
             text: 'Conectando ao servidor...'
-            font_size: '35sp'
+            font_size: '35dp'
             y: (self.parent.height / 2) * 0.5
             color: 0.2, 0.7, 1, 1
             bold:True
@@ -88,10 +89,19 @@ Manager:
 
         Label:
             text: root.status
-            font_size: '20sp'
+            font_size: '20dp'
             y: (self.parent.height / 2) * 0.5
             color: 0.2, 0.7, 1, 1
             bold:True
+
+        MenuButton:
+            # START MENU
+            text: 'Start'
+            on_release: app.root.current = 'game'
+            center_x: (self.parent.width / 4)
+            size: int(root.width / 4) , int(root.height / 6)
+            id: start_button
+            disabled: True
 
         MenuButton:
             # BACK BUTTON
@@ -112,25 +122,23 @@ Manager:
 
         Label:
             text: 'Fabinho Bird'
-            font_size: '50sp'
+            font_size: '50dp'
             y: (self.parent.height / 2) * 0.5
             color: 0.2, 0.7, 1, 1
             bold:True
 
-        Widget:
-        FloatLayout:
-            MenuButton:
-                text: 'Start'
-                on_release: app.root.current = 'game'
-                center_x: (self.parent.width / 4)
-                size: int(root.width / 4) , int(root.height / 6)
+        MenuButton:
+            text: 'Start'
+            on_release: app.root.current = 'game'
+            center_x: (self.parent.width / 4)
+            size: int(root.width / 4) , int(root.height / 6)
 
-            MenuButton:
-                # BACK BUTTON
-                text: 'Back'
-                on_release: app.root.current = 'start'
-                center_x: (self.parent.width * 3 / 4)
-                size: int(root.width / 4) , int(root.height / 6)
+        MenuButton:
+            # BACK BUTTON
+            text: 'Back'
+            on_release: app.root.current = 'start'
+            center_x: (self.parent.width * 3 / 4)
+            size: int(root.width / 4) , int(root.height / 6)
 
 <Player>:
     source:'assets/player.png'
@@ -147,7 +155,7 @@ Manager:
         Label:
             # Score Label
             text: 'Score: ' + str(int(root.score))
-            font_size: '70sp'
+            font_size: '70dp'
             color: 0.2, 0.7, 1, 1
             bold:True
             size_hint_y: None
@@ -174,25 +182,25 @@ Manager:
     FloatLayout:
         Label:
             text: 'Game Over'
-            font_size: '100sp'
+            font_size: '100dp'
             bold:True
         Label:
             text: 'Score: ' + str(int(root.score))
-            font_size: '70sp'
+            font_size: '70dp'
             bold:True
             size_hint_y: None
             height: self.font_size
             y: root.height*0.95 - self.height
         MenuButton:
             text:'Try Again'
-            font_size: '50sp'
+            font_size: '50dp'
             on_release: app.root.current = 'game'
             center_x: (self.parent.width / 2) - self.width / 2
             size: int(root.width / 4) , int(root.height / 6)
 
         MenuButton:
             text: 'Menu'
-            font_size: '50sp'
+            font_size: '50dp'
             on_release: app.root.current = 'start'
             center_x: (self.parent.width / 2) + self.width / 2
             size: int(root.width / 4) , int(root.height / 6)

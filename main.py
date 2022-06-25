@@ -23,21 +23,35 @@ class Menu(Screen):
 
 
 class MenuMultiplayer(Screen):
-    status = StringProperty('Aguardando jogador 2')
+    status = StringProperty('Conectado')
 
     def on_enter(self, *args):
         Clock.schedule_once(self.getPlayer2, 1)
+        me = client.player
+        print(me.player)
         return super().on_enter(*args)
 
     def getPlayer2(self, *args):
         player = client.player2
         if not player:
+            self.status = f'Aguardando jogador 2'
             Clock.schedule_once(self.getPlayer2, 1)
         else:
             self.status = f'Player 2 joined!'
+            self.ids.start_button.disabled = False
+            Clock.schedule_once(self.checkPlayer2, 1)
+
+    def checkPlayer2(self, *args):
+        player = client.player2
+        Clock.schedule_once(self.checkPlayer2, 1)
+
+        if not player:
+            self.status = f'Aguardando jogador 2'
+            self.ids.start_button.disabled = True
+            Clock.schedule_once(self.getPlayer2, 1)
 
     def back(self, *args):
-        self.status = 'Desconectando do servidor'
+        # self.status = 'Desconectando do servidor'
         client.disconnect()
         App.get_running_app().root.current = 'start'
 
