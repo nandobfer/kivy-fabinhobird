@@ -30,9 +30,9 @@ Manager:
         
         Label:
             text: 'Fabinho Bird'
-            font_size: '50sp'
+            font_size: '70sp'
             y: (self.parent.height / 2) * 0.5
-            color: 0.2, 0.7, 1, 1
+            color: 1, 1, 1, 1
             bold:True
 
         MenuButton:
@@ -55,8 +55,9 @@ Manager:
             # EXIT BUTTON
             text: 'Exit'
             on_release: app.stop()
-            center_x: (self.parent.width * 3 / 4)
-            size: int(root.width / 4) , int(root.height / 6)
+            size: int(root.width / 2.8) , int(root.height / 6)
+            center_x: self.parent.width / 2
+            center_y: (self.parent.height / 2) - self.height * 2.3
 
 <LoadingScreen>:
     FloatLayout:
@@ -92,6 +93,13 @@ Manager:
             color: 0.2, 0.7, 1, 1
             bold:True
 
+        MenuButton:
+            # BACK BUTTON
+            text: 'Back'
+            on_release: app.root.current = 'start'
+            center_x: (self.parent.width * 3 / 4)
+            size: int(root.width / 4) , int(root.height / 6)
+
 <Menu>:
     FloatLayout:
         canvas:
@@ -118,9 +126,9 @@ Manager:
                 size: int(root.width / 4) , int(root.height / 6)
 
             MenuButton:
-                # EXIT BUTTON
-                text: 'Exit'
-                on_release: app.stop()
+                # BACK BUTTON
+                text: 'Back'
+                on_release: app.root.current = 'start'
                 center_x: (self.parent.width * 3 / 4)
                 size: int(root.width / 4) , int(root.height / 6)
 
