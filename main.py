@@ -21,9 +21,10 @@ class Manager(ScreenManager):
 class Menu(Screen):
     pass
 
+
 class MenuMultiplayer(Screen):
     status = StringProperty('Aguardando jogador 2')
-    
+
     def on_enter(self, *args):
         Clock.schedule_once(self.getPlayer2, 1)
         return super().on_enter(*args)
@@ -34,8 +35,6 @@ class MenuMultiplayer(Screen):
             Clock.schedule_once(self.getPlayer2, 1)
         else:
             self.status = f'Player 2 joined!'
-            
-
 
 
 class Game(Screen):
@@ -53,7 +52,8 @@ class Game(Screen):
 
     def increaseScore(self, *args):
         self.score += 0.5
-        client.sio.emit('score', self.score)
+        if client:
+            client.sio.emit('score', self.score)
 
     def spawnObstacle(self, *args):
         gap = self.height*0.3
@@ -119,7 +119,8 @@ class LoadingScreen(Screen):
         global client
         client = Socket()
         App.get_running_app().root.current = 'menu-multiplayer'
-        
+
+
 class StartMenu(Screen):
     pass
 
