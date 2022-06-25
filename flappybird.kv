@@ -96,7 +96,7 @@ Manager:
         MenuButton:
             # BACK BUTTON
             text: 'Back'
-            on_release: app.root.current = 'start'
+            on_release: root.back()
             center_x: (self.parent.width * 3 / 4)
             size: int(root.width / 4) , int(root.height / 6)
 

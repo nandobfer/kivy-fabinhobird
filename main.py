@@ -36,6 +36,11 @@ class MenuMultiplayer(Screen):
         else:
             self.status = f'Player 2 joined!'
 
+    def back(self, *args):
+        self.status = 'Desconectando do servidor'
+        client.disconnect()
+        App.get_running_app().root.current = 'start'
+
 
 class Game(Screen):
     obstacles = []
