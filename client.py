@@ -40,7 +40,7 @@ class Socket():
             if data['sid'] == self.player2.sid:
                 self.player2 = None
 
-        self.sio.connect('http://44.206.122.252:5001')
+        self.sio.connect('http://44.205.67.5:5001')
         # self.sio.wait()
 
     def disconnect(self):

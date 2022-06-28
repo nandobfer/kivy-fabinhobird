@@ -9,6 +9,8 @@ Manager:
         name:'menu-multiplayer'
     Game:
         name: 'game'
+    GameMultiplayer:
+        name: 'game-multiplayer'
     GameOver:
         name: 'gameover'
 
@@ -18,6 +20,19 @@ Manager:
     background_disabled:'assets/button.png'
     background_down:'assets/button_down.png'
     size_hint: None, None
+
+<RightArrow@Button>:
+    background_normal:'assets/right_button.png'
+    background_disabled:'assets/right_button.png'
+    background_down:'assets/right_button_down.png'
+    size_hint: None, None
+
+<LeftArrow@Button>:
+    background_normal:'assets/left_button.png'
+    background_disabled:'assets/left_button.png'
+    background_down:'assets/left_button_down.png'
+    size_hint: None, None
+
 
 <StartMenu>:
     FloatLayout:
@@ -78,10 +93,48 @@ Manager:
             bold:True
 
 <MenuMultiplayer>:
+    BoxLayout:
+        orientation:'horizontal'
+        FloatLayout:
+            canvas:
+                Color:
+                    rgba: 1,1,1,1
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+            Image:
+                size_hint: None, None
+                width: root.width / 5
+                height: root.height / 5
+                center: self.parent.center
+                source: root.skin_1
+
+            LeftArrow:
+                size: root.width/15, root.height/10
+                center_y: root.height/2
+                center_x: self.parent.center_x / 2
+                on_release: root.previous_skin()
+
+            RightArrow:
+                size: root.width/15, root.height/10
+                center_y: root.height/2
+                center_x: self.parent.center_x * 1.5
+                on_release: root.next_skin()
+
+
+        FloatLayout:
+            canvas:
+                Color:
+                    rgba: 0,0,0,1
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
     FloatLayout:
         canvas:
             Color:
-                rgba: 1,1,1,1
+                rgba: 1,1,1,0
             Rectangle:
                 size: self.size
                 pos: self.pos
@@ -97,7 +150,7 @@ Manager:
         MenuButton:
             # START MENU
             text: 'Start'
-            on_release: app.root.current = 'game'
+            on_release: root.play()
             center_x: (self.parent.width / 4)
             size: int(root.width / 4) , int(root.height / 6)
             id: start_button
@@ -127,9 +180,30 @@ Manager:
             color: 0.2, 0.7, 1, 1
             bold:True
 
+        Image:
+            size_hint: None, None
+            width: root.width / 5
+            height: root.height / 5
+            center: self.parent.center
+            source: root.skin_1
+
+        LeftArrow:
+            id: previous_button
+            size: root.width/15, root.height/10
+            center_y: root.height/2
+            center_x: self.parent.center_x / 2
+            on_release: root.previous_skin()
+
+        RightArrow:
+            id: next_button
+            size: root.width/15, root.height/10
+            center_y: root.height/2
+            center_x: self.parent.center_x * 1.5
+            on_release: root.next_skin()
+
         MenuButton:
             text: 'Start'
-            on_release: app.root.current = 'game'
+            on_release: root.play()
             center_x: (self.parent.width / 4)
             size: int(root.width / 4) , int(root.height / 6)
 
@@ -140,8 +214,8 @@ Manager:
             center_x: (self.parent.width * 3 / 4)
             size: int(root.width / 4) , int(root.height / 6)
 
-<Player>:
-    source:'assets/player.png'
+# <Player>:
+    
 <Game>:
     canvas.before:
         Color:
@@ -177,6 +251,7 @@ Manager:
             size: root.height/12, root.height/12
             x: root.width/20
             y: root.height/2
+            # source: root.skin_1
 
 <GameOver>:
     FloatLayout:
@@ -194,7 +269,7 @@ Manager:
         MenuButton:
             text:'Try Again'
             font_size: '50dp'
-            on_release: app.root.current = 'game'
+            on_release: root.replay()
             center_x: (self.parent.width / 2) - self.width / 2
             size: int(root.width / 4) , int(root.height / 6)
 

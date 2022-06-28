@@ -9,9 +9,15 @@ from kivy.properties import NumericProperty, ListProperty, StringProperty
 
 from random import random
 from client import Socket
+import os
 
 fps = 1/60
 client = None
+players = None
+skins_list = []
+path = 'assets/skins/'
+skins_list = os.listdir(path)
+skin = path+skins_list[0]
 
 
 class Manager(ScreenManager):
@@ -19,11 +25,79 @@ class Manager(ScreenManager):
 
 
 class Menu(Screen):
-    pass
+    global skin, path, skins_list
+    skin_1 = StringProperty(path+skins_list[0])
+    skins = skins_list
+    skin_index = 0
+
+    def play(self, *args):
+        global players
+        players = 1
+        print(players)
+        # set to game-multiplayer for testing purposes
+        App.get_running_app().root.current = 'game'
+
+    def next_skin(self, *args):
+        global skin, path
+        next_index = self.skin_index + 1
+        if next_index < len(self.skins):
+            self.skin_index += 1
+            self.skin_1 = path + self.skins[self.skin_index]
+            skin = self.skin_1
+
+            # # disable next_index button
+            # next_index = self.skins.index(self.skin_1)+1
+            # if not next_index < len(self.skins):
+            #     self.ids.next_button.disabled = True
+
+            # # enable previous button
+            # self.ids.previous_button.disabled = False
+
+    def previous_skin(self, *args):
+        global skin
+        previous = self.skin_index - 1
+        if previous >= 0:
+            self.skin_index -= 1
+            self.skin_1 = path + self.skins[self.skin_index]
+            skin = self.skin_1
+
+            # # disable previous button
+            # previous = self.skins.index(self.skin_1)-1
+            # if not previous >= 0:
+            #     self.ids.previous_button.disabled = True
+
+            # # enable next_index button
+            # self.ids.next_button.disabled = False
 
 
 class MenuMultiplayer(Screen):
     status = StringProperty('Conectado')
+    global skin, path, skins_list
+    skins = skins_list
+    skin_index = 0
+    skin_1 = StringProperty(path+skins_list[0])
+
+    def play(self, *args):
+        global players
+        players = 2
+        print(players)
+        App.get_running_app().root.current = 'game-multiplayer'
+
+    def next_skin(self, *args):
+        global skin, path
+        next_index = self.skin_index + 1
+        if next_index < len(self.skins):
+            self.skin_index += 1
+            self.skin_1 = path + self.skins[self.skin_index]
+            skin = self.skin_1
+
+    def previous_skin(self, *args):
+        global skin
+        previous = self.skin_index - 1
+        if previous >= 0:
+            self.skin_index -= 1
+            self.skin_1 = path + self.skins[self.skin_index]
+            skin = self.skin_1
 
     def on_enter(self, *args):
         Clock.schedule_once(self.getPlayer2, 1)
@@ -65,9 +139,12 @@ class Game(Screen):
         Clock.schedule_interval(self.spawnObstacle, 1)
 
     def on_pre_enter(self, *args):
+        global skin
         self.score = 0
         self.ids.player.y = self.height / 2
         self.ids.player.speed = 0
+
+        self.ids.player.source = skin
 
     def increaseScore(self, *args):
         self.score += 0.5
@@ -75,7 +152,7 @@ class Game(Screen):
             client.sio.emit('score', self.score)
 
     def spawnObstacle(self, *args):
-        gap = self.height*0.3
+        gap = self.height*0.35
         position = (self.height-gap) * random()
         width = self.width * 0.05
         obstacle_lower = Obstacle(x=self.width, height=position, width=width)
@@ -120,13 +197,29 @@ class Game(Screen):
                 return collision
 
 
+class GameMultiplayer(Game):
+    pass
+
+
 class GameOver(Screen):
     game_screen = None
     score = NumericProperty(0)
 
     def on_enter(self, *args):
-        self.game_screen = App.get_running_app().root.get_screen('game')
+        global players
+        if players == 1:
+            self.game_screen = App.get_running_app().root.get_screen('game')
+        else:
+            self.game_screen = App.get_running_app().root.get_screen('game-multiplayer')
+
         self.score = self.game_screen.score
+
+    def replay(self, *args):
+        global players
+        if players == 1:
+            App.get_running_app().root.current = 'game'
+        else:
+            App.get_running_app().root.current = 'game-multiplayer'
 
 
 class LoadingScreen(Screen):
@@ -141,7 +234,10 @@ class LoadingScreen(Screen):
 
 
 class StartMenu(Screen):
-    pass
+    def on_enter(self, *args):
+        global players
+        players = None
+        return super().on_enter(*args)
 
 
 class Player(Image):
@@ -154,11 +250,16 @@ class Obstacle(Widget):
     scored = False
 
     def __init__(self, **kwargs):
+        global players
         super().__init__(**kwargs)
         self.animation = Animation(x=-self.width, duration=3)
         self.animation.bind(on_complete=self.vanish)
         self.animation.start(self)
-        self.game_screen = App.get_running_app().root.get_screen('game')
+
+        if players == 1:
+            self.game_screen = App.get_running_app().root.get_screen('game')
+        else:
+            self.game_screen = App.get_running_app().root.get_screen('game-multiplayer')
 
     def on_x(self, *args):
         if self.game_screen:
