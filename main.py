@@ -297,10 +297,10 @@ class Obstacle(Widget):
         self.game_screen.obstacles.remove(self)
 
 
-class FlappyBird(App):
+class FabinhoBird(App):
     def on_stop(self, *args):
         if client:
             client.disconnect()
 
 
-FlappyBird().run()
+FabinhoBird().run()
