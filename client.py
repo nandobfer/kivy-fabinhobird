@@ -8,6 +8,7 @@ class Socket():
         self.sid = None
         self.player = None
         self.player2 = None
+        self.start = False
 
         @self.sio.on('connect')
         def connect():
@@ -46,6 +47,23 @@ class Socket():
                 self.player2.skin = data['skin']
                 print(self.player2.skin)
 
+        @self.sio.on('get-server-ready')
+        def onGetServerReady():
+            if self.player2:
+                self.player2.ready = True
+
+        @self.sio.on('server-start-game')
+        def onServerStartGame():
+            self.start = True
+
+        @self.sio.on('tap')
+        def onTap():
+            self.player2.tapped = True
+
+        @self.sio.on('pos')
+        def onPos(data):
+            self.player2.pos = data['pos']
+
         self.sio.connect('http://44.205.67.5:5001')
         # self.sio.wait()
 
@@ -58,9 +76,28 @@ class Socket():
         }
         self.sio.emit('get-client-data', data)
 
+    def sendMultiplayerReady(self):
+        data = {
+            'ready': self.player.ready
+        }
+        self.sio.emit('get-client-ready', data)
+
+    def sendGameTap(self):
+        self.sio.emit('tap')
+
+    def sendPos(self):
+        data = {
+            'pos': self.player.pos
+        }
+        self.sio.emit('pos', data)
+        return self.player2.pos
+
 
 class Player():
     def __init__(self, data):
         self.sid = data['sid']
         self.player = data['player']
         self.skin = None
+        self.ready = False
+        self.tapped = False
+        self.pos = None

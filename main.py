@@ -10,6 +10,7 @@ from kivy.properties import NumericProperty, ListProperty, StringProperty
 from random import random
 from client import Socket
 import os
+import config
 
 fps = 1/60
 client = None
@@ -80,8 +81,9 @@ class MenuMultiplayer(Screen):
     def play(self, *args):
         global players
         players = 2
-        print(players)
-        App.get_running_app().root.current = 'game-multiplayer'
+        client.player.ready = True
+        client.sendMultiplayerReady()
+        self.ids.start_button.disabled = True
 
     def next_skin(self, *args):
         global skin, path
@@ -138,6 +140,15 @@ class MenuMultiplayer(Screen):
             self.status = f'Aguardando jogador 2'
             self.ids.start_button.disabled = True
             Clock.schedule_once(self.getPlayer2, 1)
+        else:
+            # get ready
+            if client.player2.ready:
+                self.status = f'Jogador 2 está pronto'
+
+            # start game
+            if client.start:
+                client.start = False
+                App.get_running_app().root.current = 'game-multiplayer'
 
     def renderPlayer2Skin(self, *args):
         if client.player2:
@@ -176,7 +187,7 @@ class Game(Screen):
             client.sio.emit('score', self.score)
 
     def spawnObstacle(self, *args):
-        gap = self.height*0.35
+        gap = self.height*config.obstacle
         position = (self.height-gap) * random()
         width = self.width * 0.05
         obstacle_lower = Obstacle(x=self.width, height=position, width=width)
@@ -189,7 +200,7 @@ class Game(Screen):
         self.add_widget(obstacle_upper, 1)
 
     def update(self, *args):
-        self.ids.player.speed += -self.height * 3 * fps
+        self.ids.player.speed += -self.height * config.gravity * fps
         self.ids.player.y += self.ids.player.speed * fps
 
         if self.ids.player.y > self.height or self.ids.player.y < 0:
@@ -198,7 +209,7 @@ class Game(Screen):
             self.gameOver()
 
     def on_touch_down(self, *args):
-        self.ids.player.speed = self.height*1
+        self.ids.player.speed = self.height * config.player_speed
 
     def gameOver(self, *args):
         Clock.unschedule(self.update, fps)
@@ -222,7 +233,49 @@ class Game(Screen):
 
 
 class GameMultiplayer(Game):
-    pass
+    frame = 0
+
+    def on_pre_enter(self, *args):
+        global skin
+        self.score = 0
+        self.ids.player.y = self.height / 2
+        self.ids.player.speed = 0
+
+        self.ids.player.source = skin
+
+        self.ids.player2.y = self.height / 2
+        self.ids.player2.speed = 0
+
+        self.ids.player2.source = client.player2.skin
+
+    def on_touch_down(self, *args):
+        self.ids.player.speed = self.height * config.player_speed
+        client.sendGameTap()
+
+    def update(self, *args):
+
+        if client.player2.tapped:
+            self.ids.player2.speed = self.height * config.player_speed
+            client.player2.tapped = False
+
+        self.frame += 1
+        if self.frame == 30:
+            self.ids.player2.pos = client.sendPos()
+            self.frame = 0
+
+        self.ids.player.speed += -self.height * config.gravity * fps
+        self.ids.player.y += self.ids.player.speed * fps
+
+        self.ids.player2.speed += -self.height * config.gravity * fps
+        self.ids.player2.y += self.ids.player2.speed * fps
+
+        client.player2.pos = (self.ids.player2.pos)
+        client.player2.pos = (self.ids.player2.pos)
+
+        if self.ids.player.y > self.height or self.ids.player.y < 0:
+            self.gameOver()
+        elif self.playerCollided():
+            self.gameOver()
 
 
 class GameOver(Screen):
@@ -245,6 +298,12 @@ class GameOver(Screen):
         else:
             App.get_running_app().root.current = 'game-multiplayer'
 
+    def menu(self, *args):
+        global players
+        if players == 2:
+            client.disconnect()
+        App.get_running_app().root.current = 'start'
+
 
 class LoadingScreen(Screen):
 
@@ -254,6 +313,7 @@ class LoadingScreen(Screen):
     def connect(self, *args):
         global client
         client = Socket()
+        client.app = App.get_running_app()
         App.get_running_app().root.current = 'menu-multiplayer'
 
 
@@ -265,6 +325,10 @@ class StartMenu(Screen):
 
 
 class Player(Image):
+    speed = NumericProperty(0)
+
+
+class Player2(Image):
     speed = NumericProperty(0)
 
 

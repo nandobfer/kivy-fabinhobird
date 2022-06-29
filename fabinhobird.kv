@@ -262,6 +262,50 @@ Manager:
             y: root.height/2
             # source: root.skin_1
 
+<GameMultiplayer>:
+    canvas.before:
+        Color:
+            rgba: 1,1,1,1
+        Rectangle:
+            size: self.size
+            pos: self.pos
+            source: 'assets/background.png'
+    FloatLayout:
+
+        Label:
+            # Score Label
+            text: 'Score: ' + str(int(root.score))
+            font_size: '70dp'
+            color: 0.2, 0.7, 1, 1
+            bold:True
+            size_hint_y: None
+            height: self.font_size
+            y: root.height*0.95 - self.height
+
+        # MenuButton:
+        #     text:'Menu'
+        #     on_release: app.root.current = 'menu'
+        #     y: self.parent.height - self.height
+        #     size: int(root.width / 4) , int(root.height / 6)
+
+        #     x: 0
+
+        Player:
+            id: player
+            # allow_stretch: True
+            size_hint: None, None
+            size: root.height/12, root.height/12
+            x: root.width/20
+            y: root.height/2
+
+        Player2:
+            id: player2
+            # allow_stretch: True
+            size_hint: None, None
+            size: root.height/12, root.height/12
+            x: root.width/10
+            y: root.height/2
+
 <GameOver>:
     FloatLayout:
         Label:
@@ -285,7 +329,7 @@ Manager:
         MenuButton:
             text: 'Menu'
             font_size: '50dp'
-            on_release: app.root.current = 'start'
+            on_release: root.menu()
             center_x: (self.parent.width / 2) + self.width / 2
             size: int(root.width / 4) , int(root.height / 6)
 
