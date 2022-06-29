@@ -8,7 +8,6 @@ class Socket():
         self.sid = None
         self.player = None
         self.player2 = None
-        self.skin = None
 
         @self.sio.on('connect')
         def connect():
@@ -41,12 +40,11 @@ class Socket():
             if data['sid'] == self.player2.sid:
                 self.player2 = None
 
-        @self.sio.on('send-multiplayer-data')
-        def onSendMultiplayerData():
-            data = {
-                'skin': self.skin
-            }
-            self.sio.emit('get-client-data', data)
+        @self.sio.on('get-server-data')
+        def onGetServerData(data):
+            if self.player2:
+                self.player2.skin = data['skin']
+                print(self.player2.skin)
 
         self.sio.connect('http://44.205.67.5:5001')
         # self.sio.wait()
@@ -54,8 +52,15 @@ class Socket():
     def disconnect(self):
         self.sio.disconnect()
 
+    def SendMultiplayerData(self):
+        data = {
+            'skin': self.player.skin
+        }
+        self.sio.emit('get-client-data', data)
+
 
 class Player():
     def __init__(self, data):
         self.sid = data['sid']
         self.player = data['player']
+        self.skin = None

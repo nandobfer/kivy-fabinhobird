@@ -90,7 +90,10 @@ class MenuMultiplayer(Screen):
             self.skin_index += 1
             self.skin_1 = path + self.skins[self.skin_index]
             skin = self.skin_1
-            client.skin = skin
+            client.player.skin = skin
+
+            # send multiplayer data
+            client.SendMultiplayerData()
 
     def previous_skin(self, *args):
         global skin
@@ -99,11 +102,15 @@ class MenuMultiplayer(Screen):
             self.skin_index -= 1
             self.skin_1 = path + self.skins[self.skin_index]
             skin = self.skin_1
-            client.skin = skin
+            client.player.skin = skin
+
+            # send multiplayer data
+            client.SendMultiplayerData()
 
     def on_enter(self, *args):
         Clock.schedule_once(self.getPlayer2, 1)
         me = client.player
+        client.player.skin = skin
         print(me.player)
         return super().on_enter(*args)
 
@@ -113,6 +120,8 @@ class MenuMultiplayer(Screen):
             self.status = f'Aguardando jogador 2'
             Clock.schedule_once(self.getPlayer2, 1)
         else:
+            # send multiplayer data
+            client.SendMultiplayerData()
             self.status = f'Player 2 joined!'
             self.ids.start_button.disabled = False
 
@@ -131,7 +140,13 @@ class MenuMultiplayer(Screen):
             Clock.schedule_once(self.getPlayer2, 1)
 
     def renderPlayer2Skin(self, *args):
-        pass
+        if client.player2:
+            if client.player2.skin:
+                self.ids.player_2_skin.source = client.player2.skin
+                self.ids.player_2_skin.opacity = 1
+
+        else:
+            self.ids.player_2_skin.opacity = 0
 
     def back(self, *args):
         # self.status = 'Desconectando do servidor'

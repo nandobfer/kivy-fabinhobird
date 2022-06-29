@@ -134,10 +134,11 @@ Manager:
             Image:
                 id: player_2_skin
                 size_hint: None, None
-                width: 0
-                height: 0
+                opacity: 0
+                width: root.width / 5
+                height: root.height / 5
                 center: self.parent.center
-                source: root.skin_1
+                # source: root.skin_1
 
     FloatLayout:
         canvas:
