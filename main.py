@@ -36,7 +36,6 @@ class Menu(Screen):
         global players
         players = 1
         print(players)
-        # set to game-multiplayer for testing purposes
         App.get_running_app().root.current = 'game'
 
     def next_skin(self, *args):
@@ -47,14 +46,6 @@ class Menu(Screen):
             self.skin_1 = path + self.skins[self.skin_index]
             skin = self.skin_1
 
-            # # disable next_index button
-            # next_index = self.skins.index(self.skin_1)+1
-            # if not next_index < len(self.skins):
-            #     self.ids.next_button.disabled = True
-
-            # # enable previous button
-            # self.ids.previous_button.disabled = False
-
     def previous_skin(self, *args):
         global skin
         previous = self.skin_index - 1
@@ -62,14 +53,6 @@ class Menu(Screen):
             self.skin_index -= 1
             self.skin_1 = path + self.skins[self.skin_index]
             skin = self.skin_1
-
-            # # disable previous button
-            # previous = self.skins.index(self.skin_1)-1
-            # if not previous >= 0:
-            #     self.ids.previous_button.disabled = True
-
-            # # enable next_index button
-            # self.ids.next_button.disabled = False
 
 
 class MenuMultiplayer(Screen):
@@ -170,23 +153,13 @@ class Game(Screen):
     obstacles = []
     score = NumericProperty(0)
 
-    def __init__(self, **kw):
-        super().__init__(**kw)
-        self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
-        self._keyboard.bind(on_key_down=self._on_keyboard_down)
-
-    def _keyboard_closed(self):
-        self._keyboard.unbind(on_key_down=self._on_keyboard_down)
-        self._keyboard = None
-
-    def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
-        if keycode[1] == ' ':
-            self.tap()
-        return True
+    def on_touch_down(self, *args):
+        self.ids.player.speed = self.height * config.player_speed
 
     def on_enter(self, *args):
         Clock.schedule_interval(self.update, fps)
         Clock.schedule_interval(self.spawnObstacle, 1)
+        self.player = self.ids.player
 
     def on_pre_enter(self, *args):
         global skin
@@ -223,12 +196,6 @@ class Game(Screen):
         elif self.playerCollided():
             self.gameOver()
 
-    def on_touch_down(self, *args):
-        self.tap(*args)
-
-    def tap(self, *args):
-        self.ids.player.speed = self.height * config.player_speed
-
     def gameOver(self, *args):
         Clock.unschedule(self.update, fps)
         Clock.unschedule(self.spawnObstacle, 1)
@@ -243,11 +210,9 @@ class Game(Screen):
             return True
 
     def playerCollided(self):
-        collision = False
         for obstacle in self.obstacles:
             if self.getCollision(self.ids.player, obstacle):
-                collision = True
-                return collision
+                return True
 
 
 class GameMultiplayer(Game):
