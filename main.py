@@ -6,6 +6,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.clock import Clock
 from kivy.animation import Animation
 from kivy.properties import NumericProperty, ListProperty, StringProperty
+from kivy.core.window import Window
 
 from random import random
 from client import Socket
@@ -169,6 +170,20 @@ class Game(Screen):
     obstacles = []
     score = NumericProperty(0)
 
+    def __init__(self, **kw):
+        super().__init__(**kw)
+        self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
+        self._keyboard.bind(on_key_down=self._on_keyboard_down)
+
+    def _keyboard_closed(self):
+        self._keyboard.unbind(on_key_down=self._on_keyboard_down)
+        self._keyboard = None
+
+    def _on_keyboard_down(self, keyboard, keycode, text, modifiers):
+        if keycode[1] == ' ':
+            self.tap()
+        return True
+
     def on_enter(self, *args):
         Clock.schedule_interval(self.update, fps)
         Clock.schedule_interval(self.spawnObstacle, 1)
@@ -209,6 +224,9 @@ class Game(Screen):
             self.gameOver()
 
     def on_touch_down(self, *args):
+        self.tap(*args)
+
+    def tap(self, *args):
         self.ids.player.speed = self.height * config.player_speed
 
     def gameOver(self, *args):
