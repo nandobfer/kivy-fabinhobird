@@ -211,17 +211,23 @@ Manager:
             on_release: root.next_skin()
 
         MenuButton:
-            text: 'Start'
+            # text: 'Start'
+            background_normal: 'assets/buttons/start.png'
+            background_down: 'assets/buttons/start_down.png'
             on_release: root.play()
             center_x: (self.parent.width / 4)
-            size: int(root.width / 4) , int(root.height / 6)
+            center_y: self.parent.height / 4
+            size: int(root.width / 3) , int(root.height / 4)
 
         MenuButton:
             # BACK BUTTON
-            text: 'Back'
+            # text: 'Back'
+            background_normal: 'assets/buttons/back.png'
+            background_down: 'assets/buttons/back_down.png'
             on_release: app.root.current = 'start'
             center_x: (self.parent.width * 3 / 4)
-            size: int(root.width / 4) , int(root.height / 6)
+            center_y: self.parent.height / 4
+            size: int(root.width / 3) , int(root.height / 4)
 
 # <Player>:
     
